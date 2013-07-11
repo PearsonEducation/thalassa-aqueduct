@@ -1,0 +1,36 @@
+global
+  log 127.0.0.1 local0
+  log 127.0.0.1 local1 notice
+  daemon
+  maxconn 4096
+  user mikebre
+  group staff
+  stats socket {{haproxySocketPath}} level admin
+
+  defaults
+    log global
+    option dontlognull
+    option redispatch
+    retries 3
+    maxconn 2000
+    timeout connect 5000ms
+    timeout client 50000ms
+    timeout server 50000ms
+
+  listen stats :1988
+    mode http
+    stats enable
+    stats uri /
+    stats refresh 2s
+    stats realm Haproxy\ Stats
+    stats auth showme:showme
+
+{{#each frontends}}
+  frontend {{name}}
+    {{frontendHelper this}}
+{{/each}}
+
+{{#each backends}}
+  backend {{name}}
+    {{backendHelper this}}
+{{/each}}

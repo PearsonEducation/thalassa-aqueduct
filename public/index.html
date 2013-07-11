@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+  <script src="/js/bundle.js"></script>
+  <script type="text/javascript">
+    var shoe        = require('shoe')
+      , crdt        = require('crdt')
+      , routeTable  = new crdt.Doc()
+      ;
+
+    routeTable.on('row_update', function (row) { 
+      console.log(row.toJSON()) 
+    });
+
+    var stream = shoe('/stream');
+
+    var rtStream = routeTable.createStream();
+    stream.pipe(rtStream).pipe(stream);
+    //rtStream.pipe(stream);
+
+    var app = angular.module('aqueduct', []).controller('Status', function ($scope) {
+      $scope.frontendsMap = {};
+      $scope.backendsMap = {};
+      $scope.status = {};
+
+      routeTable.on('row_update', function (row) {
+        var row = row.toJSON();
+        if (row._type === 'frontend') {
+          $scope.frontendsMap[row.id] = row;
+        }
+        else if (row._type === 'backend') {
+          $scope.backendsMap[row.id] = row;
+        }
+        else if (row._type === 'frontendStats') {
+          $scope.status[row.frontend] = row.status;
+        }
+        else if (row._type === 'backendStats') {
+          $scope.status[row.backend] = row.status;
+        }
+        else if (row._type === 'backendMemberStats') {
+          $scope.status[row.name] = row.status;
+        }
+        setTimeout(function () { $scope.$apply(); }, 10);
+      });
+
+    });
+
+  </script>
+</head>
+<body ng-app="aqueduct">
+
+  <div ng-controller="Status">
+    <h3>Frontends</h3>
+    <p ng-repeat="(id, frontend) in frontendsMap">
+      {{frontend.name}}: {{status[frontend.id]}}  --> {{frontend.backend}}
+    </p>
+
+    <h3>Backends</h3>
+    <div ng-repeat="(id, backend) in backendsMap">
+      {{backend.name}}: {{status[backend.id]}}
+      <ul>
+      <li ng-repeat="member in backend.members">
+        {{member.host}}:{{member.port}} - {{status[backend.name+'_'+member.host+':'+member.port]}}
+      </li>
+      </ul>
+    </div>
+
+  </div>
+
+</body>
+</html>

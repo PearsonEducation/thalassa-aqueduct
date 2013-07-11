@@ -1,0 +1,44 @@
+{
+  "name": "thalassa-aqueduct",
+  "version": "0.0.0",
+  "description": "Dynamic haproxy load balancer and configuration. Part of Thalassa",
+  "main": "index.js",
+  "scripts": {
+    "test": "jshint *.js lib/*.js test/*.js --config .jshintrc && mocha test/test*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PearsonEducation/thalassa-aqueduct.git"
+  },
+  "keywords": [
+    "thalassa",
+    "haproxy",
+    "loadbalancer",
+    "proxy",
+    "seaport"
+  ],
+  "author": "Mike Brevoort <mike.brevoort@pearson.com>",
+  "license": "TBD",
+  "readmeFilename": "README.md",
+  "gitHead": "b3a2c6670b3cd39203a1d8e743a7fa2588d8641e",
+  "bugs": {
+    "url": "https://github.com/PearsonEducation/thalassa-aqueduct/issues"
+  },
+  "dependencies": {
+    "hapi": "~1.8.2",
+    "crdt": "~3.5.1",
+    "handlebars": "~1.0.12",
+    "debounce": "0.0.2",
+    "deep-equal": "0.0.0",
+    "shoe": "0.0.11",
+    "thalassa": "git+ssh://git@github.com:PearsonEducation/Thalassa.git",
+    "haproxy": "0.0.2",
+    "cli-color": "~0.2.2"
+  },
+  "devDependencies": {
+    "jshint": "~2.1.4",
+    "mocha": "~1.12.0",
+    "portfinder": "~0.2.1",
+    "request": "~2.22.0"
+  }
+}
