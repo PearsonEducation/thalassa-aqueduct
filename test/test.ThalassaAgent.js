@@ -51,8 +51,8 @@ describe ('ThalassaAgent', function () {
           var members = backend.toJSON().members;
           assert.equal(members.length, 0);
           done();
-        }, 20);
-      }, 20);
+        }, 50);
+      }, 50);
     });
   });
 
