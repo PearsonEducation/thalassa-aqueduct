@@ -122,7 +122,6 @@ describe ('API', function () {
           json: be
         }, function (error, response, body) {
           assert.ifError(error);
-          console.log(body);
           assert.equal(200, response.statusCode);
 
           request({
