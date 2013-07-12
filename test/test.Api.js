@@ -1,6 +1,7 @@
 var assert = require('assert')
   , path = require('path')
   , request = require('request')
+  , async = require('async')
   , portfinder = require('portfinder')
   , Thalassa = require('thalassa')
   , Hapi = require('hapi')
@@ -8,9 +9,14 @@ var assert = require('assert')
   , Data = require('../lib/Data')
   ;
 
-describe ('Harbor Module', function () {
+describe ('API', function () {
 
-  describe ('api', function () {
+  function MockHaproxyManager() {
+    this.latestConfig = 'fake templated config string\n';
+  }
+
+
+  describe ('HTTP', function () {
     var localhost = '127.0.0.1'
       , apiPort = null
       , server = null
@@ -19,6 +25,7 @@ describe ('Harbor Module', function () {
       , thalassaApiPort = null
       , thalassaApiHost = localhost
       , thalassaServer = null
+      , haproxyManager = null
       , apiRoot = null
       ;
 
@@ -42,7 +49,8 @@ describe ('Harbor Module', function () {
         apiPort = port3;
         apiRoot = 'http://' + localhost + ':' + apiPort;
         server = Hapi.createServer(localhost, apiPort);
-        server.route( (new Api({ data: new Data() })).routes() );
+        haproxyManager = new MockHaproxyManager();
+        server.route( (new Api({ data: new Data(), haproxyManager: haproxyManager })).routes() );
         server.start(done);
       });
     });
@@ -114,6 +122,7 @@ describe ('Harbor Module', function () {
           json: be
         }, function (error, response, body) {
           assert.ifError(error);
+          console.log(body);
           assert.equal(200, response.statusCode);
 
           request({
@@ -152,6 +161,97 @@ describe ('Harbor Module', function () {
           });
         });
       }, 50);
+    });
+
+    it ('should get all frontends and backends', function (done) {
+      var fe1 = { name: 'fe1', bind: '*:80', backend: 'be1' };
+      var fe2 = { name: 'fe2', bind: '*:81', backend: 'be1' };
+      var be1 = { name: 'be1', type: 'static', members: [{ host: '10.10.10.10', port: '80' },
+                                                         { host: '10.10.10.20', port: '81' }]};
+      var be2 = { name: 'be2', type: 'static', members: [{ host: '10.10.20.10', port: '90' },
+                                                         { host: '10.10.20.20', port: '91' }]};
+
+      function put (uri, obj, next) {
+        request({
+          method: 'PUT',
+          uri: apiRoot + uri,
+          json: obj
+        }, function (error, response, body) {
+          assert.ifError(error);
+          assert.equal(200, response.statusCode);
+          next();
+        });
+      }
+
+      async.series([
+        function (next) { put ('/frontends/' + fe1.name, fe1, next); },
+        function (next) { put ('/frontends/' + fe2.name, fe2, next); },
+        function (next) { put ('/backends/' + be1.name, be1, next); },
+        function (next) { put ('/backends/' + be2.name, be2, next); },
+        function (next) {
+          request({
+            uri: apiRoot + '/frontends',
+            json: true
+          }, function (error, response, body) {
+            assert.ifError(error);
+            assert.equal(200, response.statusCode);
+            assert(Array.isArray(body));
+            assert(body.filter(function (fe) { return fe.backend === 'be1';}).length, 2);
+            next();
+          });
+        },
+        function (next) {
+          request({
+            uri: apiRoot + '/backends',
+            json: true
+          }, function (error, response, body) {
+            assert.ifError(error);
+            assert.equal(200, response.statusCode);
+            assert(Array.isArray(body));
+            assert(body.filter(function (be) { return be.name === 'be1' || be.name === 'be2'; }).length, 2);
+            next();
+          });
+        },
+        function (next) {
+          request({
+            uri: apiRoot + '/backends/'+be1.name+'/members',
+            json: true
+          }, function (error, response, body) {
+            assert.ifError(error);
+            assert.equal(200, response.statusCode);
+            assert(Array.isArray(body));
+            assert(body.length, 2);
+            assert.deepEqual(body, be1.members);
+            next();
+          });
+        },
+        function (next) {
+          request({
+            uri: apiRoot + '/backends/doesnotexist/members',
+            json: true
+          }, function (error, response, body) {
+            assert.ifError(error);
+            assert.equal(404, response.statusCode);
+            next();
+          });
+        }
+      ],
+      function () {
+        done();
+      });
+    });
+
+    it ('should get latest haproxy config', function (done) {
+      request({
+        uri: apiRoot + '/haproxy/config',
+        json: true
+      }, function (error, response, body) {
+        assert.ifError(error);
+        assert.equal(200, response.statusCode);
+        assert.equal(response.headers['content-type'], 'text/plain; charset=utf-8');
+        assert.equal(body, haproxyManager.latestConfig);
+        done();
+      });
     });
   });
 });
