@@ -33,14 +33,8 @@
         else if (row._type === 'backend') {
           $scope.backendsMap[row.id] = row;
         }
-        else if (row._type === 'frontendStats') {
-          $scope.status[row.frontend] = row.status;
-        }
-        else if (row._type === 'backendStats') {
-          $scope.status[row.backend] = row.status;
-        }
-        else if (row._type === 'backendMemberStats') {
-          $scope.status[row.name] = row.status;
+        else if (row._type === 'stat') {
+          $scope.status[row.id] = row.status;
         }
         setTimeout(function () { $scope.$apply(); }, 10);
       });
@@ -54,15 +48,15 @@
   <div ng-controller="Status">
     <h3>Frontends</h3>
     <p ng-repeat="(id, frontend) in frontendsMap">
-      {{frontend.name}}: {{status[frontend.id]}}  --> {{frontend.backend}}
+      {{frontend.name}} ({{frontend.bind}}): {{status['stat/'+frontend.id]}}  --> {{frontend.backend}}
     </p>
 
     <h3>Backends</h3>
     <div ng-repeat="(id, backend) in backendsMap">
-      {{backend.name}}: {{status[backend.id]}}
+      {{backend.name}}: {{status['stat/'+backend.id]}}
       <ul>
       <li ng-repeat="member in backend.members">
-        {{member.host}}:{{member.port}} - {{status[backend.name+'_'+member.host+':'+member.port]}}
+        {{member.host}}:{{member.port}} - {{status['stat/'+backend.id+'/'+backend.name+'_'+member.host+':'+member.port]}}
       </li>
       </ul>
     </div>
