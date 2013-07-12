@@ -102,8 +102,8 @@ describe ('ThalassaAgent', function () {
           var members = backend.toJSON().members;
           assert.equal(members.length, 0);
           done();
-        }, 10);
-      }, 10);
+        }, 50);
+      }, 50);
     });
   });
 
