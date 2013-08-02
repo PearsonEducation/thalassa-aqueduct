@@ -1,9 +1,14 @@
 #!/usr/bin/env node
-var Aqueuct = require('..')
-  , shoe = require('shoe')
+var Aqueduct = require('..')
   , Hapi = require('hapi')
   , util = require('util')
+  , pkg = require('../package.json')
   ;
+
+// require('nodetime').profile({
+//     accountKey: '1765a180c09b73ea0a7d7262ff6dc60d776bf395', 
+//     appName: 'Aqueuct'
+//   });
 
 var optimist = require('optimist')
             .options({
@@ -54,7 +59,7 @@ if (argv.h) {
 }
 
 var log = argv.log = require('../lib/defaultLogger')( (argv.debug == true) ? 'debug' : 'error' );
-var aqueduct = new Aqueuct(argv);
+var aqueduct = new Aqueduct(argv);
 var server = Hapi.createServer(argv.host, argv.port);
 server.route(aqueduct.apiRoutes());
 
@@ -66,9 +71,8 @@ server.route({
     }
 });
 
-shoe(function (sock) {
-  sock.pipe(aqueduct.createStream()).pipe(sock);
-}).install(server.listener, '/stream')
+aqueduct.bindReadableWebsocketStream(server, '/readstream');
+aqueduct.thalassaAgent.client.register(pkg.name, pkg.version, argv.port);
 
 server.start(function () {
   log('info', util.format("Thalassa Aqueduct listening on %s:%s", argv.host, argv.port));
@@ -77,3 +81,14 @@ server.start(function () {
 aqueduct.haproxyManager.on('configChanged', function() { log('debug', 'Config changed') });
 aqueduct.haproxyManager.on('reloaded', function() { log('debug', 'Haproxy reloaded') });
 aqueduct.data.stats.on('changes', function (it) { log('debug', it.state.id, it.state.status )})
+
+var memwatch = require('memwatch');
+memwatch.on('leak', function(info) { log('debug', 'leak', info); });
+memwatch.on('stats', function(stats) { log('debug', 'stats', stats); });
+var hd = new memwatch.HeapDiff();
+
+setInterval(function () {
+  log('debug', 'diff', hd.end().after.size);
+  hd = new memwatch.HeapDiff();
+}, 10000);
+

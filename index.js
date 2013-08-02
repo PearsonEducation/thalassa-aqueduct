@@ -5,6 +5,7 @@ var assert = require('assert')
   , HaproxyStats = require('./lib/HaproxyStats')
   , ThalassaAgent = require('./lib/ThalassaAgent')
   , Api = require('./lib/Api')
+  , WebsocketStream = require('./lib/WebsocketStream')
   ;
 
 
@@ -57,6 +58,11 @@ module.exports = function Aqueduct (opts) {
     log: log
   });
 
+  var websocketStream = new WebsocketStream({
+    data: data,
+    log: log
+  });
+
   this.data = data;
   this.haproxy = haproxy;
   this.haproxyManager = haproxyManager;
@@ -64,4 +70,7 @@ module.exports = function Aqueduct (opts) {
   this.thalassaAgent = thalassaAgent;
   this.apiRoutes = api.routes.bind(api);
   this.createStream = data.createStream.bind(data);
+  this.createReadableStream = data.createReadableStream.bind(data);
+  this.bindReadableWebsocketStream = websocketStream.bindReadableStream.bind(websocketStream);
+  this.bindWritableWebsocketStream = websocketStream.bindWritableStream.bind(websocketStream);
 };
