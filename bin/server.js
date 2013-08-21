@@ -82,13 +82,13 @@ aqueduct.haproxyManager.on('configChanged', function() { log('debug', 'Config ch
 aqueduct.haproxyManager.on('reloaded', function() { log('debug', 'Haproxy reloaded') });
 aqueduct.data.stats.on('changes', function (it) { log('debug', it.state.id, it.state.status )})
 
-var memwatch = require('memwatch');
-memwatch.on('leak', function(info) { log('debug', 'leak', info); });
-memwatch.on('stats', function(stats) { log('debug', 'stats', stats); });
-var hd = new memwatch.HeapDiff();
+// var memwatch = require('memwatch');
+// memwatch.on('leak', function(info) { log('debug', 'leak', info); });
+// memwatch.on('stats', function(stats) { log('debug', 'stats', stats); });
+// var hd = new memwatch.HeapDiff();
 
-setInterval(function () {
-  log('debug', 'diff', hd.end().after.size);
-  hd = new memwatch.HeapDiff();
-}, 10000);
+// setInterval(function () {
+//   log('debug', 'diff', hd.end().after.size);
+//   hd = new memwatch.HeapDiff();
+// }, 10000);
 
