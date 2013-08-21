@@ -6,6 +6,9 @@
   "scripts": {
     "test": "jshint *.js lib/*.js test/*.js --config .jshintrc && mocha test/test*"
   },
+  "bin": {
+    "thalassa-aqueduct": "./bin/server.js"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/PearsonEducation/thalassa-aqueduct.git"
