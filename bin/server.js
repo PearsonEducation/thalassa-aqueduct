@@ -41,7 +41,7 @@ var optimist = require('optimist')
                 describe: 'template used to generate Haproxy config'
               },
               persistence: {
-                describe: 'leveldb file path to persist data'
+                describe: 'directory to save configuration'
               },
               debug: {
                 boolean: true,

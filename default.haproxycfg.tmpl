@@ -3,8 +3,8 @@ global
   log 127.0.0.1 local1 notice
   daemon
   maxconn 4096
-  user mikebre
-  group staff
+  user haproxy
+  group haproxy
   stats socket {{haproxySocketPath}} level admin
 
   defaults
