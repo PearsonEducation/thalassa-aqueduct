@@ -35,7 +35,7 @@
     "deep-equal": "0.0.0",
     "shoe": "0.0.11",
     "thalassa": "git+ssh://git@github.com:PearsonEducation/thalassa.git",
-    "haproxy": "0.0.2",
+    "haproxy": "git+ssh://git@github.com:mbrevoort/haproxy.git#7f4964",
     "cli-color": "~0.2.2",
     "changeset": "0.0.5",
     "optimist": "~0.6.0",

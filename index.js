@@ -28,7 +28,8 @@ module.exports = function Aqueduct (opts) {
 
   var haproxy = new Haproxy(opts.haproxySocketPath, {
     config:  opts.haproxyCfgPath,
-    pidFile: opts.haproxyPidPath
+    pidFile: opts.haproxyPidPath,
+    sudo: opts.sudo
   });
 
   var haproxyManager = new HaproxyManager({
@@ -36,6 +37,7 @@ module.exports = function Aqueduct (opts) {
     data: data,
     haproxyCfgPath: opts.haproxyCfgPath,
     templateFile: opts.templateFile,
+    sudo: opts.sudo,
     log: log
   });
 

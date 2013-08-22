@@ -43,6 +43,9 @@ var optimist = require('optimist')
               persistence: {
                 describe: 'directory to save configuration'
               },
+              sudo: {
+                describe: 'use sudo when starting haproxy'
+              },
               debug: {
                 boolean: true,
                 describe: 'enabled debug logging'
