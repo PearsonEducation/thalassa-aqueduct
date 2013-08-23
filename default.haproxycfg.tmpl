@@ -5,6 +5,7 @@ global
   maxconn 4096
   user haproxy
   group haproxy
+  # stats socket {{haproxySocketPath}} user USER_RUNNING_NODE_PROCESS level admin
   stats socket {{haproxySocketPath}} level admin
 
   defaults
