@@ -1,4 +1,5 @@
 var assert = require('assert')
+  , resolve = require('path').resolve
   , Haproxy = require('haproxy')
   , Data = require('./lib/Data')
   , HaproxyManager = require('./lib/HaproxyManager')
@@ -27,8 +28,8 @@ module.exports = function Aqueduct (opts) {
   assert(opts.thalassaPort, 'opts.thalassaPort required');
 
   var haproxy = new Haproxy(opts.haproxySocketPath, {
-    config:  opts.haproxyCfgPath,
-    pidFile: opts.haproxyPidPath,
+    config:  resolve(opts.haproxyCfgPath),
+    pidFile: resolve(opts.haproxyPidPath),
     sudo: opts.sudo
   });
 

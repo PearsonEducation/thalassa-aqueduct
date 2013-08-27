@@ -32,6 +32,10 @@ var optimist = require('optimist')
                 default: '/tmp/haproxy.status.sock',
                 describe: 'path to Haproxy socket file'
               },
+              haproxyPidPath: {
+                default: '/var/run/haproxy.pid',
+                describe: 'where to find haproxy pid file (same as in template)'
+              },
               haproxyCfgPath: {
                 default: '/etc/haproxy/haproxy.cfg',
                 describe: 'generated Haproxy config location'
