@@ -26,6 +26,7 @@ module.exports = function Aqueduct (opts) {
   assert(opts.haproxySocketPath, 'opts.haproxySocketPath required');
   assert(opts.thalassaHost, 'opts.thalassaHost required');
   assert(opts.thalassaPort, 'opts.thalassaPort required');
+  assert(opts.thalassaApiPort, 'opts.thalassaPort required');
 
   var haproxy = new Haproxy(opts.haproxySocketPath, {
     config:  resolve(opts.haproxyCfgPath),
@@ -52,6 +53,7 @@ module.exports = function Aqueduct (opts) {
     data: data,
     host: opts.thalassaHost,
     port: opts.thalassaPort,
+    apiport: opts.thalassaApiPort,
     log: log
   });
 

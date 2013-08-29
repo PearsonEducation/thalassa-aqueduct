@@ -17,11 +17,10 @@
     "thalassa",
     "haproxy",
     "loadbalancer",
-    "proxy",
-    "seaport"
+    "proxy"
   ],
   "author": "Mike Brevoort <mike.brevoort@pearson.com>",
-  "license": "TBD",
+  "license": "Apache2",
   "readmeFilename": "README.md",
   "gitHead": "b3a2c6670b3cd39203a1d8e743a7fa2588d8641e",
   "bugs": {

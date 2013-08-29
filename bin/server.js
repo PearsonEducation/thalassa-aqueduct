@@ -26,7 +26,11 @@ var optimist = require('optimist')
               },
               thalassaPort: {
                 default : 5001,
-                describe: 'port of the Thalassa server'
+                describe: 'socket port of the Thalassa server'
+              },
+              thalassaApiPort: {
+                default : 10000,
+                describe: 'http API port of the Thalassa server'
               },
               haproxySocketPath: {
                 default: '/tmp/haproxy.status.sock',
@@ -34,7 +38,7 @@ var optimist = require('optimist')
               },
               haproxyPidPath: {
                 default: '/var/run/haproxy.pid',
-                describe: 'where to find haproxy pid file (same as in template)'
+                describe: 'path to  Haproxy pid file'
               },
               haproxyCfgPath: {
                 default: '/etc/haproxy/haproxy.cfg',
