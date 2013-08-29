@@ -39,7 +39,8 @@
     "changeset": "0.0.5",
     "optimist": "~0.6.0",
     "websocket-stream": "~0.2.0",
-    "ws": "~0.4.27"
+    "ws": "~0.4.27",
+    "xtend": "~2.0.6"
   },
   "devDependencies": {
     "jshint": "~2.1.4",
