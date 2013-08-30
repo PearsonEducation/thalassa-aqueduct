@@ -20,6 +20,9 @@ var optimist = require('optimist')
                 default : 10000,
                 describe: 'port to bind to'
               },
+              label: {
+                describe: 'a logical label for this aqueduct instance for registration metadata'
+              },
               thalassaHost: {
                 default : '127.0.0.1',
                 describe: 'host of the Thalassa server'
@@ -29,7 +32,7 @@ var optimist = require('optimist')
                 describe: 'socket port of the Thalassa server'
               },
               thalassaApiPort: {
-                default : 10000,
+                default : 9000,
                 describe: 'http API port of the Thalassa server'
               },
               haproxySocketPath: {
@@ -83,7 +86,11 @@ server.route({
 });
 
 aqueduct.bindReadableWebsocketStream(server, '/readstream');
-aqueduct.thalassaAgent.client.register(pkg.name, pkg.version, argv.port);
+
+//
+// register with Thalassa and pass label meta data if it's been specified.
+//
+aqueduct.thalassaAgent.client.register(pkg.name, pkg.version, argv.port, { label: argv.label });
 
 server.start(function () {
   log('info', util.format("Thalassa Aqueduct listening on %s:%s", argv.host, argv.port));
