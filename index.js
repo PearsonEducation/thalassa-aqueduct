@@ -68,6 +68,24 @@ module.exports = function Aqueduct (opts) {
     log: log
   });
 
+
+  //
+  // Wire up stats to write to data and to the websocket streams
+  //
+  haproxyStats.on('stat', function (statObj) {
+    websocketStream.writeStat(statObj);
+
+    if (statObj.type === 'frontend') {
+      data.setFrontendStat(statObj);
+    }
+    else if (statObj.type === 'backend') {
+      data.setBackendStat(statObj);
+    }
+    else if (statObj.type === 'backendMember') {
+      data.setBackendMemberStat(statObj);
+    }
+  });
+
   this.data = data;
   this.haproxy = haproxy;
   this.haproxyManager = haproxyManager;
