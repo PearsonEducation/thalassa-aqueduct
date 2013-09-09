@@ -57,7 +57,9 @@ The easiest way to run Aqueduct at this point is with the bin script from the co
 
 For example the command to run might look something like this (typically how I run locally):
 
-	./node_modules/.bin/thalassa-aqueduct --haproxyCfgPath  /tmp/haproxy.cfg --debug --persistence '/tmp/aqueduct.json' --templateFile dev.haproxycfg.tmpl --haproxyPidPath /tmp/haproxy.pid  --label 'myapp-dev'
+	./node_modules/.bin/thalassa-aqueduct --haproxyCfgPath  /tmp/haproxy.cfg --debug --persistence \
+	  '/tmp/aqueduct.json' --templateFile dev.haproxycfg.tmpl --haproxyPidPath /tmp/haproxy.pid  \
+	  --label 'myapp-dev'
 
 # HTTP API
 
