@@ -169,7 +169,7 @@ describe ('Data', function () {
       assert.equal(stat.status, 'UP 2/3');
       done();
     });
-    data.setFrontendStat(frontendName, { name: frontendName, status: 'UP 2/3' });
+    data.setFrontendStat({ id: 'stat/frontend/' + frontendName, name: frontendName, status: 'UP 2/3' });
   });
 
   it ('should set backend stat', function (done) {
@@ -185,13 +185,14 @@ describe ('Data', function () {
       assert.equal(stat.status, 'DOWN');
       done();
     });
-    data.setBackendStat(backendName, { name: backendName, status: 'DOWN' });
+    data.setBackendStat({ id: 'stat/backend/' + backendName, name: backendName, status: 'DOWN' });
   });
 
   it ('should set backend member stat', function (done) {
     var data = new Data();
     var backendName = 'foo';
     var memberName = 'boo-member';
+    var id = 'stat/backend/' + backendName + '/' + memberName;
 
     data.stats.on('changes', function (row) {
       var stat = row.toJSON();
@@ -202,7 +203,7 @@ describe ('Data', function () {
       assert.equal(stat.status, 'DOWN 1/2');
       done();
     });
-    data.setBackendMemberStat(backendName, memberName, { name: backendName, status: 'DOWN 1/2' });
+    data.setBackendMemberStat({ id: id, name: memberName, backendName: backendName, status: 'DOWN 1/2' });
   });
 
 });

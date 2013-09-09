@@ -21,7 +21,7 @@ var optimist = require('optimist')
                 describe: 'port to bind to'
               },
               label: {
-                describe: 'a logical label for this aqueduct instance for registration metadata'
+                describe: 'logical label for this aqueduct'
               },
               thalassaHost: {
                 default : '127.0.0.1',
@@ -61,7 +61,7 @@ var optimist = require('optimist')
                 boolean: true,
                 describe: 'enabled debug logging'
               },
-              showhelp: {
+              help: {
                 alias: 'h'
               }
             });
