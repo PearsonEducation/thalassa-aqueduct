@@ -49,7 +49,7 @@ The easiest way to run Aqueduct at this point is with the bin script from the co
       --haproxySocketPath  path to Haproxy socket file               [default: "/tmp/haproxy.status.sock"]
       --haproxyPidPath     path to  Haproxy pid file                 [default: "/var/run/haproxy.pid"]
       --haproxyCfgPath     generated Haproxy config location         [default: "/etc/haproxy/haproxy.cfg"]
-      --templateFile       template used to generate Haproxy config  [default: "/Users/mikebre/development/thalassa/thalassa-aqueduct/bin/../default.haproxycfg.tmpl"]
+      --templateFile       template used to generate Haproxy config  [default: "default.haproxycfg.tmpl"]
       --persistence        directory to save configuration
       --sudo               use sudo when starting haproxy
       --debug              enabled debug logging
