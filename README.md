@@ -159,7 +159,7 @@ For example:
     	"id": "backend/live",
     	"_type": "backend",
     	"name": "live",
-    	"type": "spindrift",
+    	"type": "dynamic",
     	"role": "classroom-ui",
     	"version": "1.0.0",
     	"balance": "roundrobin",
@@ -200,9 +200,9 @@ For example:
 Create or update a `backend` by `name`. `PUT` with a `Content-Type` of `application/json` and a body like:
 
     {
-        "type" : "spindrift|static" 
-      , "role" : "foo" // only required if type = spindrift
-      , "version" : "1.0.0" // only required if type = spindrift
+        "type" : "dynamic|static" 
+      , "role" : "foo" // only required if type = dynamic
+      , "version" : "1.0.0" // only required if type = dynamic
       , "balance" : "roundrobin|source" // defaults to roundrobin
       , "host" : "myapp.com"  // default: undefined, if specified request to member will contain this host header
       , "health" : {                 // optional health check
@@ -213,7 +213,7 @@ Create or update a `backend` by `name`. `PUT` with a `Content-Type` of `applicat
       }
       , "mode" : "http|tcp" // default: http
       , "natives": []  // array of strings of raw config USE SPARINGLY!!
-      , "members" : [] // if type = spindrift this is dynamically populated based on role/version subscription
+      , "members" : [] // if type = dynamic this is dynamically populated based on role/version subscription
                        // otherwise expects { host: '10.10.10.10', port: 8080}
     }
 

@@ -30,7 +30,7 @@ describe ('Data', function () {
   });
 
   it ('should create a backend', function (done) {
-    var name = 'test', type = 'spindrift';
+    var name = 'test', type = 'dynamic';
     var data = new Data();
     data.setBackend({ name: name, type: type });
     var backends = data.backends.toJSON();
@@ -53,9 +53,9 @@ describe ('Data', function () {
 
   it ('should get array of backends', function () {
     var data = new Data();
-    data.setBackend({ name: 'foo', type: 'spindrift' });
+    data.setBackend({ name: 'foo', type: 'dynamic' });
     data.setBackend({ name: 'bar', type: 'static' });
-    data.setBackend({ name: 'baz', type: 'spindrift' });
+    data.setBackend({ name: 'baz', type: 'dynamic' });
     var backends = data.getBackends();
     assert(Array.isArray(backends));
     assert.equal(3, backends.length);
@@ -85,7 +85,7 @@ describe ('Data', function () {
   });
 
   it ('should delete a backend', function () {
-    var name = 'test', type = 'spindrift';
+    var name = 'test', type = 'dynamic';
     var data = new Data();
     data.setBackend({ name: name, type: type });
     assert.equal(1, data.backends.toJSON().length);

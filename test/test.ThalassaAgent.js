@@ -10,7 +10,7 @@ describe ('ThalassaAgent', function () {
 
   describe ('existing backend', function (done) {
     var port, server, client, host = '127.0.0.1', backendName = 'be1',
-        role = 'foo', version = '1.1.1', clientPort = '80';
+        role = 'foo1', version = '1.1.1', clientPort = '80';
 
     before(function (done) {
       portfinder.getPort(function (err, aPort) {
@@ -20,7 +20,8 @@ describe ('ThalassaAgent', function () {
 
         server = new Thalassa.Server({ host: host, port: port, apiport: apiport, reaperFreq: 100 });
         client = new Thalassa.Client({ host: host, port: port, apiport: apiport });
-        client.register(role, version, clientPort, { secondsToExpire: 1 });
+        client.register(role, version, clientPort, { secondsToExpire: 2 });
+        client.subscribe(role, version);
         done();
       });
 
@@ -28,39 +29,48 @@ describe ('ThalassaAgent', function () {
 
     after(function () {
       server.close();
+      client.stop();
     });
 
     it ('should register/free add/remove members', function (done) {
+      this.timeout(5000);
       var data = new Data();
       var agent = new ThalassaAgent({ data: data, host: host, port: port, apiport: apiport });
+      data.setBackend({ name: backendName, type: 'dynamic', role: role, version: version });
 
-      data.setBackend({ name: backendName, type: 'spindrift', role: role, version: version });
-      client.start();
 
+      // there's a race condition between calling the HTTP API for members and getting updates
+      // the socket if the registration slips in between the time the getRegistration request is 
+      // still being processed. 
       setTimeout(function() {
-        var backend = data.backends.get(data.backendId(backendName));
-        assert(backend);
-        var members = backend.toJSON().members;
-        assert.equal(members.length, 1);
-        assert.equal(members[0].name, role);
-        assert.equal(members[0].version, version);
-        client.unregister(role, version, clientPort);
-
+        client.start();
         setTimeout(function() {
           var backend = data.backends.get(data.backendId(backendName));
           assert(backend);
           var members = backend.toJSON().members;
-          assert.equal(members.length, 0);
-          done();
-        }, 1500);
-      }, 50);
+          assert.equal(members.length, 1);
+          assert.equal(members[0].name, role);
+          assert.equal(members[0].version, version);
+
+          client.unregister(role, version, clientPort);
+          setTimeout(function() {
+            var backend = data.backends.get(data.backendId(backendName));
+            assert(backend);
+            var members = backend.toJSON().members;
+            assert.equal(members.length, 0);
+            done();
+          }, 300);
+
+        }, 300);
+
+      }, 100);
     });
   });
 
   describe ('existing service registraions', function (done) {
     var port, server, client, agent, data,
         host = '127.0.0.1', backendName = 'be1',
-        role = 'foo', version = '1.1.2', clientPort = '80';
+        role = 'foo2', version = '1.1.2', clientPort = '80';
 
     before(function (done) {
       data = new Data();
@@ -76,9 +86,6 @@ describe ('ThalassaAgent', function () {
         client.register(role, version, clientPort, { secondsToExpire: 1 });
         client.start();
         setTimeout(done, 500);
-        // client.on('register', function (service) {
-        //   if (service.role === role && service.version === version) setTimeout(done, 10);
-        // });
       });
     });
 
@@ -88,7 +95,7 @@ describe ('ThalassaAgent', function () {
 
     it ('should add/remove members on backend creation', function (done) {
 
-      data.setBackend({ name: backendName, type: 'spindrift', role: role, version: version });
+      data.setBackend({ name: backendName, type: 'dynamic', role: role, version: version });
 
       setTimeout(function() {
         var backend = data.backends.get(data.backendId(backendName));

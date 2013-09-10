@@ -112,7 +112,7 @@ describe ('API', function () {
     });
 
     it ('should put and get and delete backendend', function (done) {
-      var be = { name: 'foo', role: 'foo', version: '1.0.0', type: 'spindrift' };
+      var be = { name: 'foo', role: 'foo', version: '1.0.0', type: 'dynamic' };
 
       // need to wait until it comes up
       setTimeout(function () {
