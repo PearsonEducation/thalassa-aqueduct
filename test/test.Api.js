@@ -62,13 +62,13 @@ describe ('API', function () {
 
 
     it ('should put and get and delete frontend', function (done) {
-      var fe = { name: 'foo', bind: '*:80', backend: 'foob' };
+      var fe = { key: 'foo', bind: '*:80', backend: 'foob' };
 
       // need to wait until it comes up
       setTimeout(function () {
         request({
           method: 'PUT',
-          uri: apiRoot + '/frontends/' + fe.name,
+          uri: apiRoot + '/frontends/' + fe.key,
           json: fe
         }, function (error, response, body) {
           assert.ifError(error);
@@ -76,20 +76,20 @@ describe ('API', function () {
 
           request({
             method: 'GET',
-            uri: apiRoot + '/frontends/' + fe.name,
+            uri: apiRoot + '/frontends/' + fe.key,
             json: true
           }, function (error, response, body) {
             assert.ifError(error);
             assert.equal(200, response.statusCode);
 
             assert(body);
-            assert.equal(fe.name, body.name);
+            assert.equal(fe.key, body.key);
             assert.equal(fe.bind, body.bind);
             assert.equal(fe.backend, body.backend);
 
             request({
               method: 'DELETE',
-              uri: apiRoot + '/frontends/' + fe.name,
+              uri: apiRoot + '/frontends/' + fe.key,
               json: true
             }, function (error, response, body) {
               assert.ifError(error);
@@ -97,7 +97,7 @@ describe ('API', function () {
 
               request({
                 method: 'GET',
-                uri: apiRoot + '/frontends/' + fe.name,
+                uri: apiRoot + '/frontends/' + fe.key,
                 json: true
               }, function (error, response, body) {
                 assert.ifError(error);
@@ -112,13 +112,13 @@ describe ('API', function () {
     });
 
     it ('should put and get and delete backendend', function (done) {
-      var be = { name: 'foo', role: 'foo', version: '1.0.0', type: 'dynamic' };
+      var be = { key: 'foo', name: 'foo', version: '1.0.0', type: 'dynamic' };
 
       // need to wait until it comes up
       setTimeout(function () {
         request({
           method: 'PUT',
-          uri: apiRoot + '/backends/' + be.name,
+          uri: apiRoot + '/backends/' + be.key,
           json: be
         }, function (error, response, body) {
           assert.ifError(error);
@@ -126,21 +126,21 @@ describe ('API', function () {
 
           request({
             method: 'GET',
-            uri: apiRoot + '/backends/' + be.name,
+            uri: apiRoot + '/backends/' + be.key,
             json: true
           }, function (error, response, body) {
             assert.ifError(error);
             assert.equal(200, response.statusCode);
 
             assert(body);
+            assert.equal(be.key, body.key);
             assert.equal(be.name, body.name);
-            assert.equal(be.role, body.role);
             assert.equal(be.version, body.version);
             assert.equal(be.type, body.type);
 
             request({
               method: 'DELETE',
-              uri: apiRoot + '/backends/' + be.name,
+              uri: apiRoot + '/backends/' + be.key,
               json: true
             }, function (error, response, body) {
               assert.ifError(error);
@@ -148,7 +148,7 @@ describe ('API', function () {
 
               request({
                 method: 'GET',
-                uri: apiRoot + '/backends/' + be.name,
+                uri: apiRoot + '/backends/' + be.key,
                 json: true
               }, function (error, response, body) {
                 assert.ifError(error);
@@ -163,11 +163,11 @@ describe ('API', function () {
     });
 
     it ('should get all frontends and backends', function (done) {
-      var fe1 = { name: 'fe1', bind: '*:80', backend: 'be1' };
-      var fe2 = { name: 'fe2', bind: '*:81', backend: 'be1' };
-      var be1 = { name: 'be1', type: 'static', members: [{ host: '10.10.10.10', port: '80' },
+      var fe1 = { key: 'fe1', bind: '*:80', backend: 'be1' };
+      var fe2 = { key: 'fe2', bind: '*:81', backend: 'be1' };
+      var be1 = { key: 'be1', type: 'static', members: [{ host: '10.10.10.10', port: '80' },
                                                          { host: '10.10.10.20', port: '81' }]};
-      var be2 = { name: 'be2', type: 'static', members: [{ host: '10.10.20.10', port: '90' },
+      var be2 = { key: 'be2', type: 'static', members: [{ host: '10.10.20.10', port: '90' },
                                                          { host: '10.10.20.20', port: '91' }]};
 
       function put (uri, obj, next) {
@@ -183,10 +183,10 @@ describe ('API', function () {
       }
 
       async.series([
-        function (next) { put ('/frontends/' + fe1.name, fe1, next); },
-        function (next) { put ('/frontends/' + fe2.name, fe2, next); },
-        function (next) { put ('/backends/' + be1.name, be1, next); },
-        function (next) { put ('/backends/' + be2.name, be2, next); },
+        function (next) { put ('/frontends/' + fe1.key, fe1, next); },
+        function (next) { put ('/frontends/' + fe2.key, fe2, next); },
+        function (next) { put ('/backends/' + be1.key, be1, next); },
+        function (next) { put ('/backends/' + be2.key, be2, next); },
         function (next) {
           request({
             uri: apiRoot + '/frontends',
@@ -207,13 +207,13 @@ describe ('API', function () {
             assert.ifError(error);
             assert.equal(200, response.statusCode);
             assert(Array.isArray(body));
-            assert(body.filter(function (be) { return be.name === 'be1' || be.name === 'be2'; }).length, 2);
+            assert(body.filter(function (be) { return be.key === 'be1' || be.key === 'be2'; }).length, 2);
             next();
           });
         },
         function (next) {
           request({
-            uri: apiRoot + '/backends/'+be1.name+'/members',
+            uri: apiRoot + '/backends/'+be1.key+'/members',
             json: true
           }, function (error, response, body) {
             assert.ifError(error);

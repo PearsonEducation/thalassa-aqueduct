@@ -7,11 +7,11 @@ describe ('Data', function () {
   var filePath = '/tmp/test.data.persistence';
   it ('should store and retrieve data', function (done) {
     var data = new Data({ persistence: filePath });
-    var name = 'test', bind = "*:80", backend = 'testbackend';
+    var key = 'test', bind = "*:80", backend = 'testbackend';
 
     setTimeout(function() {
-      data.setFrontend({ name: name, bind: bind, backend: backend });
-      data.setBackend({ name: 'be', type: 'static' });
+      data.setFrontend({ key: key, bind: bind, backend: backend });
+      data.setBackend({ key: 'be', type: 'static' });
 
       setTimeout(function () {
         var data2 = new Data({ persistence: filePath });
