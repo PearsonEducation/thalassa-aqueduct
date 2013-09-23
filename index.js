@@ -31,7 +31,7 @@ module.exports = function Aqueduct (opts) {
   var haproxy = new Haproxy(opts.haproxySocketPath, {
     config:  resolve(opts.haproxyCfgPath),
     pidFile: resolve(opts.haproxyPidPath),
-    sudo: opts.sudo
+    prefix: (opts.sudo) ? 'sudo' : undefined
   });
 
   var haproxyManager = new HaproxyManager({
