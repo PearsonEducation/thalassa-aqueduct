@@ -7,6 +7,7 @@ var assert = require('assert')
   , ThalassaAgent = require('./lib/ThalassaAgent')
   , Api = require('./lib/Api')
   , WebsocketStream = require('./lib/WebsocketStream')
+  , pkg = require('./package.json')
   ;
 
 
@@ -68,6 +69,13 @@ module.exports = function Aqueduct (opts) {
     log: log
   });
 
+  //
+  // register with Thalassa and pass label meta data if it's been specified.
+  //
+  thalassaAgent.client.register(pkg.name, pkg.version, opts.port, { label: opts.label });
+  // TODO make client.register return the registration instead of this hack that blows encapsulation
+  var me = thalassaAgent.client.intents[0];
+
 
   //
   // Wire up stats to write to data and to the websocket streams
@@ -85,6 +93,22 @@ module.exports = function Aqueduct (opts) {
       data.setBackendMemberStat(statObj);
     }
   });
+
+//
+  // Wire up haproxy changes to write to activity stream
+  //
+  haproxyManager.on('configChanged', function (statObj) {
+    var activityObj = { type: 'activity',  time: Date.now(), verb: 'haproxyConfigChanged', object: me.id }
+    log('debug', 'activity', activityObj);
+    websocketStream.writeActivity(activityObj);
+  });
+
+  haproxyManager.on('reloaded', function (statObj) {
+    var activityObj = { type: 'activity',  time: Date.now(), verb: 'haproxyRestarted', object: me.id }
+    log('debug', 'activity', activityObj);
+    websocketStream.writeActivity(activityObj);
+  });
+
 
   this.data = data;
   this.haproxy = haproxy;

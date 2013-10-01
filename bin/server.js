@@ -2,7 +2,6 @@
 var Aqueduct = require('..')
   , Hapi = require('hapi')
   , util = require('util')
-  , pkg = require('../package.json')
   ;
 
 // require('nodetime').profile({
@@ -86,11 +85,6 @@ server.route({
 });
 
 aqueduct.bindReadableWebsocketStream(server, '/readstream');
-
-//
-// register with Thalassa and pass label meta data if it's been specified.
-//
-aqueduct.thalassaAgent.client.register(pkg.name, pkg.version, argv.port, { label: argv.label });
 
 server.start(function () {
   log('info', util.format("Thalassa Aqueduct listening on %s:%s", argv.host, argv.port));
