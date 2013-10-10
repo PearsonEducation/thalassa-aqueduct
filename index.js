@@ -98,13 +98,13 @@ module.exports = function Aqueduct (opts) {
   // Wire up haproxy changes to write to activity stream
   //
   haproxyManager.on('configChanged', function (statObj) {
-    var activityObj = { type: 'activity',  time: Date.now(), verb: 'haproxyConfigChanged', object: me.id }
+    var activityObj = { type: 'activity',  time: Date.now(), verb: 'haproxyConfigChanged', object: me.id };
     log('debug', 'activity', activityObj);
     websocketStream.writeActivity(activityObj);
   });
 
   haproxyManager.on('reloaded', function (statObj) {
-    var activityObj = { type: 'activity',  time: Date.now(), verb: 'haproxyRestarted', object: me.id }
+    var activityObj = { type: 'activity',  time: Date.now(), verb: 'haproxyRestarted', object: me.id };
     log('debug', 'activity', activityObj);
     websocketStream.writeActivity(activityObj);
   });

@@ -208,7 +208,7 @@ Create or update a `backend` by `name`. `PUT` with a `Content-Type` of `applicat
       , "health" : {                 // optional health check
       	  "method": "GET"            // HTTP method
       	, "uri": "/checkity-check"   // URI to call
-      	, "httpVersion": "HTTP/1.1"  // HTTP/1.0 or HTTP/1.1
+      	, "httpVersion": "HTTP/1.1"  // HTTP/1.0 or HTTP/1.1 `host` required if HTTP/1.1
       	, "interval": 5000           // period to check, milliseconds
       }
       , "mode" : "http|tcp" // default: http

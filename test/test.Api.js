@@ -162,6 +162,35 @@ describe ('API', function () {
       }, 50);
     });
 
+    it ('should require host with health.httpVersion HTTP/1.1', function (done) {
+      var health = { uri:'/checkity-check', httpVersion:'HTTP/1.1' };
+      var be = { key: 'healthy', name: 'foo', version: '1.0.0', type: 'dynamic', health: health };
+
+      // need to wait until it comes up
+      setTimeout(function () {
+        request({
+          method: 'PUT',
+          uri: apiRoot + '/backends/' + be.key,
+          json: be
+        }, function (error, response, body) {
+          assert.ifError(error);
+          assert.equal(400, response.statusCode);
+
+          be.host = 'foo.com';
+
+          request({
+            method: 'PUT',
+            uri: apiRoot + '/backends/' + be.key,
+            json: be
+          }, function (error, response, body) {
+            assert.ifError(error);
+            assert.equal(200, response.statusCode);
+            done();
+          });
+        });
+      }, 50);
+    });
+
     it ('should get all frontends and backends', function (done) {
       var fe1 = { key: 'fe1', bind: '*:80', backend: 'be1' };
       var fe2 = { key: 'fe2', bind: '*:81', backend: 'be1' };
