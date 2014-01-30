@@ -158,9 +158,9 @@ For example:
     [{
     	"id": "backend/live",
     	"_type": "backend",
-    	"name": "live",
+    	"key": "live",
     	"type": "dynamic",
-    	"role": "classroom-ui",
+    	"name": "classroom-ui",
     	"version": "1.0.0",
     	"balance": "roundrobin",
     	"host": null,
@@ -201,7 +201,7 @@ Create or update a `backend` by `name`. `PUT` with a `Content-Type` of `applicat
 
     {
         "type" : "dynamic|static" 
-      , "role" : "foo" // only required if type = dynamic
+      , "name" : "foo" // only required if type = dynamic
       , "version" : "1.0.0" // only required if type = dynamic
       , "balance" : "roundrobin|source" // defaults to roundrobin
       , "host" : "myapp.com"  // default: undefined, if specified request to member will contain this host header
@@ -233,11 +233,11 @@ Delete a specific `backend` by `name`. Expect `200` or `404`
 Update a `backend`s `role` and `version` Subscription with a `Content-Type` of `application/json` and a body like:
 
     {
-        "role": "myapp"		// app name registered to thalassa
+        "name": "myapp"		// app name registered to thalassa
       , "version": "1.1.0" // version to route to
     }
 
-`role` is actually optional. You may also just send the `version`:
+`name` is actually optional. You may also just send the `version`:
 
     {
         "version": "1.1.0"
