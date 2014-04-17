@@ -33,7 +33,7 @@
     "debounce": "0.0.2",
     "deep-equal": "0.0.0",
     "shoe": "0.0.11",
-    "thalassa": "~0.3.4",
+    "thalassa": "~0.4.0",
     "haproxy": "0.0.3",
     "cli-color": "~0.2.2",
     "changeset": "0.0.5",
