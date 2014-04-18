@@ -4,10 +4,11 @@ var assert = require('assert')
   , Data = require('./lib/Data')
   , HaproxyManager = require('./lib/HaproxyManager')
   , HaproxyStats = require('./lib/HaproxyStats')
-  , ThalassaAgent = require('./lib/ThalassaAgent')
+  , ConsulAgent = require('./lib/ConsulAgent')
   , Api = require('./lib/Api')
   , WebsocketStream = require('./lib/WebsocketStream')
   , pkg = require('./package.json')
+  , ip = require('ip')
   ;
 
 
@@ -25,9 +26,7 @@ module.exports = function Aqueduct (opts) {
   });
 
   assert(opts.haproxySocketPath, 'opts.haproxySocketPath required');
-  assert(opts.thalassaHost, 'opts.thalassaHost required');
-  assert(opts.thalassaPort, 'opts.thalassaPort required');
-  assert(opts.thalassaApiPort, 'opts.thalassaPort required');
+  assert(opts.consulRootUrl, 'opts.consulRootUrl required');
 
   var haproxy = new Haproxy(opts.haproxySocketPath, {
     config:  resolve(opts.haproxyCfgPath),
@@ -50,11 +49,9 @@ module.exports = function Aqueduct (opts) {
     log: log
   });
 
-  var thalassaAgent = new ThalassaAgent({
+  var agent = new ConsulAgent({
     data: data,
-    host: opts.thalassaHost,
-    port: opts.thalassaPort,
-    apiport: opts.thalassaApiPort,
+    rootUrl: opts.consulRootUrl,
     log: log
   });
 
@@ -72,9 +69,15 @@ module.exports = function Aqueduct (opts) {
   //
   // register with Thalassa and pass label meta data if it's been specified.
   //
-  thalassaAgent.client.register(pkg.name, pkg.version, opts.port, { label: opts.label });
+  // thalassaAgent.client.register(pkg.name, pkg.version, opts.port, { label: opts.label });
   // TODO make client.register return the registration instead of this hack that blows encapsulation
-  var me = thalassaAgent.client.intents[0];
+
+  var me = {
+    host: ip.address(),
+    port: opts.port,
+    name: pkg.name,
+    version: pkg.version
+  }
 
 
   //
@@ -114,7 +117,7 @@ module.exports = function Aqueduct (opts) {
   this.haproxy = haproxy;
   this.haproxyManager = haproxyManager;
   this.haproxyStats = haproxyStats;
-  this.thalassaAgent = thalassaAgent;
+  this.agent = agent;
   this.apiRoutes = api.routes.bind(api);
   this.createStream = data.createStream.bind(data);
   this.createReadableStream = data.createReadableStream.bind(data);
