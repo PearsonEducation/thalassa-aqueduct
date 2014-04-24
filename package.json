@@ -36,7 +36,6 @@
     "handlebars": "~1.0.12",
     "hapi": "~1.8.2",
     "haproxy": "~0.0.3",
-    "moment": "^2.5.1",
     "mux-demux": "~3.7.8",
     "optimist": "~0.6.0",
     "shoe": "0.0.11",
