@@ -1,0 +1,76 @@
+<div class="pool-detail proxy-detail" >
+
+  <div class="pool-heading">
+     <h2><a href="#" ng-click="navigateToDetail(ps)">{{ps.meta.service.meta.hostname}}</a></h2>
+    <span>{{ps.id}}</span>
+  </div>
+
+  <div class="frontends">
+    <h3 class="icon-desktop"> Frontends</h3>
+    
+    <div class="pool-info" ng-repeat="fe in frontends">
+      <span class="status-label label-{{statusLabelClass(statuses[fe.id].status)}}">{{statuses[fe.id].status}}</span>
+      <h4>{{fe.key}}</h4>
+      <div class="time-series-wrapper">
+        <div class="time-series-label">{{statuses[fe.id].connections.current}} connections / {{statuses[fe.id].connections.max}} max</div>
+        <time-series data="data = connStats[fe.id]" width="550" height="80" axis="true" type="area"></time-series>
+      </div>
+      <ul class="list-unstyled">
+        <li><div class="icon-headphones"></div> <strong>bind:</strong> {{fe.bind}}</li>
+        <li>
+          <div class="icon-wrench"></div> 
+          <strong>default</strong> <span class="glyphicon glyphicon-arrow-right"></span> {{fe.backend}}<br/>
+        </li>
+        <li>
+          <span ng-repeat="rule in fe.rules">
+            <div class="icon-wrench"></div> 
+            <strong>{{rule.type}}</strong>: {{rule.operation}} {{rule.header || ""}} "{{rule.value}}" 
+            <span class="glyphicon glyphicon-arrow-right"></span> {{rule.backend}}<br/>
+          </span>
+        </li>
+        <li><div class="icon-cogs"></div> <strong>natives</strong>
+          <ul>
+            <li ng-repeat="native in fe.natives">{{natives}}</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="backends">
+    <h3 class="icon-hdd"> Backends</h3>
+    
+    <div class="pool-info" ng-repeat="be in backends">
+      <span class="status-label label-{{statusLabelClass(statuses[be.id].status)}}">{{statuses[be.id].status}}</span>
+      <h4>{{be.key}}</h4>
+      <span class="version pull-right" ng-switch on="be.type">
+        <span ng-switch-when="dynamic">{{be.name}}@
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary btn-xs">{{be.version}}</button>
+          <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <li ng-repeat="v in versionMap[be.id]"><a href="#" ng-click="changeVersion(be, v.version)">{{v.version}} ({{v.count}})</a></li>
+          </ul>
+        </div>
+        </span>
+        <span ng-switch-when="static">static</span>
+      </span>
+      <div class="time-series-wrapper">
+        <span class="time-series-label">{{statuses[be.id].connections.current}} connections / {{statuses[be.id].connections.max}} max</span><br/>
+        <time-series data="connStats[be.id]" width="450" height="80" axis="true" type="area"></time-series>
+        <servers-donut class="donut" total="{{be.members.length}}" healthy="{{healthCounts[be.id]}}"></servers-donut>
+      </div>
+      
+      <div class="members">
+        <h5>Members:</h5>
+        <div ng-repeat="member in be.members">
+          {{member.host}}:{{member.port}} 
+          <span class="label label-{{statusLabelClass(statuses[member.id].status)}}" style="float: right">{{statuses[member.id].status}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="clearfix"></span>
+</div>

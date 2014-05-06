@@ -1,0 +1,19 @@
+{
+  "name": "thalassa-crowsnest",
+  "version": "0.0.0",
+  "main": "app.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-ui": "~0.4.0",
+    "bootstrap": "~3.0.0",
+    "underscore": "~1.5.1",
+    "d3": "~3.3.2",
+    "rickshaw": "~1.4.3"
+  }
+}
