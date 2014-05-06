@@ -24,6 +24,7 @@ angular.module('crowsnest').controller('PoolDetailController', function ($scope,
     $scope.frontends = ps.getFrontends();
     $scope.backends = ps.getBackends();
     $scope.connStats = {};
+    $scope.healthCounts = {};
     $scope.statuses = {};
     $scope.versionMap = {};
     for (k in $scope.frontends) {

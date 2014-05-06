@@ -71,12 +71,15 @@ module.exports = function Aqueduct (opts) {
   thalassaAgent.client.register(pkg.name, pkg.version, opts.port, { label: opts.label });
   // TODO make client.register return the registration instead of this hack that blows encapsulation
   var me = thalassaAgent.client.intents[0];
+  
    
   // Stream stats into a leveldb
   var db = new Db(opts, function () {
-    db.writeActivity({ type: 'activity',  time: Date.now(), verb: 'started', object: me.id })
-  });;
+    db.writeActivity({ type: 'activity',  time: Date.now(), verb: 'started', object: me.id });
+  });
 
+  thalassaAgent.on('activity', db.writeActivity.bind(db));  
+  
   // Wire up stats to write to stats db
   haproxyStats.on('stat', function (statObj) {
     db.writeStat(statObj);
@@ -105,9 +108,7 @@ module.exports = function Aqueduct (opts) {
     db.writeActivity(activityObj); 
   });
 
-  this.aqueductDoc = new crdt.Doc();
-  this.aqueductDoc.service = me;
-  this._clientMuxes = [];
+  this.service = me;
   this.data = data;
   this.db = db;
   this.haproxy = haproxy;
@@ -121,24 +122,10 @@ module.exports = function Aqueduct (opts) {
   // Create a new MuxDemux stream for each browser client.
   this.createMuxStream = function () {
     var self = this;
-    var mx = new MuxDemux();
-    var id = Date.now() + String(Math.ceil(Math.random()*9999999));
+    var mx = this.thalassaAgent.createReadableMuxStream();
       
-    this._clientMuxes[id] = mx;
-    mx.on('close', function () {
-      delete self._clientMuxes[id];
-      delete aqueductStream;
-      delete controlStream;
-      delete statsStream;
-      delete activityStream;
-    });
-    
-    console.log('Creating a client muxdemux stream');
-    console.dir(self.data.frontends);
-     
     //wire up the config stream
-    var aqueductStream = mx.createStream({ type: 'aqueduct', id: self.aqueductDoc.id, service: self.aqueductDoc.service }); 
-    //aqueductStream.pipe(self.data.createReadableStream()).pipe(this.aqueductDoc.createStream()).pipe(aqueductStream);
+    var aqueductStream = mx.createStream({ type: 'aqueduct', id: mx.id, service: self.service }); 
     aqueductStream.pipe(self.data.createReadableStream()).pipe(aqueductStream);
     
     // Used to keep track of this clients stats subscriptions
@@ -199,13 +186,16 @@ module.exports = function Aqueduct (opts) {
     var activityStream = mx.createWriteStream({ type: 'activity' });
     var activityWriteListenery = function (activityObj) {
       activityStream.write(activityObj);
-    }
+    };
+    
+    self.thalassaAgent.on('activity', activityWriteListenery);
     self.haproxyManager.on('configChanged', activityWriteListenery);
     self.haproxyManager.on('reloaded', activityWriteListenery);
     self.db.activityValueStream().pipe(through(function write(data) { activityStream.write(data); }));
     
     mx.on('end', function () {
       self.haproxyStats.removeListener('stat', statWriteListener);
+      self.thalassaAgent.removeListener('activity', activityWriteListenery);
       self.haproxyManager.removeListener('configChanged', activityWriteListenery); 
       self.haproxyManager.removeListener('reloaded', activityWriteListenery);
       aqueductStream.destroy();

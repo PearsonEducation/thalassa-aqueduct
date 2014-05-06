@@ -26,6 +26,7 @@ angular.module('crowsnest').factory('dataStream', function (browserify, $rootSco
   var aqueductServer = null;
 
   var data = new events.EventEmitter();
+  data.getServices = function getServices () { return services; }; 
   data.getActivity = function getServices () { return activity; };
   data.getPoolServer = function getPoolServer() {
     return aqueductServer;
