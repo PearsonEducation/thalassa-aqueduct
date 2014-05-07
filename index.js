@@ -168,6 +168,7 @@ module.exports = function Aqueduct (opts) {
     // wire up a stats stream to send realtime aqueduct stats to the client
     var statStream = mx.createWriteStream({ type: 'stat' });
     var statWriteListener = function (stat) {
+      stat.hostId = self.service.id;
       if (statSubscriptions[stat.hostId]) {
         statStream.write(stat);
       }
