@@ -4,7 +4,9 @@
   "description": "Dynamic haproxy load balancer and configuration. Part of Thalassa",
   "main": "index.js",
   "scripts": {
-    "test": "jshint *.js lib/*.js test/*.js --config .jshintrc && mocha test/test*"
+    "test": "jshint *.js lib/*.js test/*.js --config .jshintrc && mocha test/test*",
+    "start": "browserify public/js/services/browserifyService.js -o public/js/browserifyServiceBundle.js && ./bin/server.js --debug",
+    "postinstall": "browserify public/js/services/browserifyService.js -o public/js/browserifyServiceBundle.js"
   },
   "bin": {
     "thalassa-aqueduct": "./bin/server.js"
@@ -46,7 +48,9 @@
     "extend": "~1.2.0",
     "level": "~0.18.0",
     "mkdirp": "~0.3.5",
-    "split": "~0.2.10"
+    "split": "~0.2.10",
+    "browserify": "~2.25.1",
+    "CBuffer": "~0.1.4"
   },
   "devDependencies": {
     "jshint": "~2.1.4",

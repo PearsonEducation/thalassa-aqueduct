@@ -88,7 +88,7 @@ server.route({
     method: 'GET',
     path: '/{path*}',
     handler: {
-        directory: { path: './public', listing: false, index: true }
+        directory: { path: __dirname + '/../public', listing: false, index: true }
     }
 });
 
