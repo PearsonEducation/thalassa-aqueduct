@@ -1,7 +1,7 @@
 angular.module('crowsnest').controller('PoolDetailController', function ($scope, $route, dataStream) {
   $scope.ps = dataStream.getPoolServer();
   if($scope.ps == null){ 
-    dataStream.on('aqueduct-connected', function(data){
+    dataStream.on('pool-connected', function(data){
       $scope.$apply(function() {
         $scope.ps = data;
         dataStream.subscribeToStats(data.id);

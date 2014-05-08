@@ -124,7 +124,7 @@ module.exports = function Aqueduct (opts) {
     var self = this;
     var mx = this.thalassaAgent.createReadableMuxStream();
       
-    //wire up the config stream
+    //wire up the pool server stream
     var aqueductStream = mx.createStream({ type: 'aqueduct', id: mx.id, service: self.service }); 
     aqueductStream.pipe(self.data.createReadableStream()).pipe(aqueductStream);
     
@@ -167,7 +167,9 @@ module.exports = function Aqueduct (opts) {
     // wire up a stats stream to send realtime aqueduct stats to the client
     var statStream = mx.createWriteStream({ type: 'stat' });
     var statWriteListener = function (stat) {
-      stat.hostId = self.service.id;
+      //we used to keep track of multiple haproxy servers which required
+      //host id, keeping it here to not break clients
+      stat.hostId = self.service.id; 
       if (statSubscriptions[stat.hostId]) {
         statStream.write(stat);
       }

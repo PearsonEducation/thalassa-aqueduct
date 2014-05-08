@@ -61,7 +61,6 @@ angular.module('crowsnest').factory('dataStream', function (browserify, $rootSco
 
     this.frontendsSet = this.doc.createSet('_type', 'frontend');
     this.backendsSet  = this.doc.createSet('_type', 'backend');
-    //this.statsSet     = this.doc.createSet('_type', 'stat');
 
     var frontends = {}, backends = {};
 
