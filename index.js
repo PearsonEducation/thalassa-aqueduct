@@ -155,8 +155,7 @@ module.exports = function Aqueduct (opts) {
           } 
 
           var backend = extend(true, {}, row.toJSON());
-          backend.version = obj.version;
-          if (obj.name) backend.name = obj.name;
+          backend.version = version;
 
           self.data.setBackend(backend); 
         }
