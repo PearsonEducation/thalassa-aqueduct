@@ -1,0 +1,6 @@
+<input placeholder="Type to filter" ng-model="filterText" class="ng-pristine ng-valid">
+<ul class="activity-list">
+	<li ng-repeat="ev in activity | filter:filterText | orderBy:'time':true">
+		<span class="label label-{{ev.verb}}">{{ev.verb}}</span> {{ev.object}} <small>{{ev.time | date:'short'}}</small>
+	</li>
+</ul>

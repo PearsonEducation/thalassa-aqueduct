@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var Aqueduct = require('..')
   , Hapi = require('hapi')
+  , shoe = require('shoe')
   , util = require('util')
   ;
 
@@ -53,6 +54,10 @@ var optimist = require('optimist')
               persistence: {
                 describe: 'directory to save configuration'
               },
+              dbPath: {
+                default : __dirname + '/db',
+                describe: 'filesystem path for leveldb'
+              },
               sudo: {
                 describe: 'use sudo when starting haproxy'
               },
@@ -76,15 +81,33 @@ var aqueduct = new Aqueduct(argv);
 var server = Hapi.createServer(argv.host, argv.port);
 server.route(aqueduct.apiRoutes());
 
+// anything at the top level goes to index.html
+server.route({ method: 'GET', path: '/{p}', handler: { file: { path: __dirname+'/../public/index.html' }}});
+
 server.route({
     method: 'GET',
     path: '/{path*}',
     handler: {
-        directory: { path: './public', listing: false, index: true }
+        directory: { path: __dirname + '/../public', listing: false, index: true }
     }
 });
 
-aqueduct.bindReadableWebsocketStream(server, '/readstream');
+//Setup websocket to the client/browser
+var sock = shoe();
+sock.install(server.listener, '/aqueductStreams');
+sock.on('connection', function (stream) {
+  var s = aqueduct.createMuxStream();
+  stream.pipe(s).pipe(stream);
+
+  stream.on('end', function () {
+    s.destroy();
+  })
+
+});
+
+sock.on('log', function (severity, msg) {
+  log(severity, msg);
+})
 
 server.start(function () {
   log('info', util.format("Thalassa Aqueduct listening on %s:%s", argv.host, argv.port));

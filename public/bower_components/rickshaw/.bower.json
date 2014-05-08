@@ -1,0 +1,15 @@
+{
+  "name": "rickshaw",
+  "homepage": "https://github.com/shutterstock/rickshaw",
+  "version": "1.4.3",
+  "_release": "1.4.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.4.3",
+    "commit": "e4f4cd737d7e00c40b3fd96021e8531ba2397d1c"
+  },
+  "_source": "git://github.com/shutterstock/rickshaw.git",
+  "_target": "~1.4.3",
+  "_originalSource": "rickshaw",
+  "_direct": true
+}

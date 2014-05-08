@@ -1,67 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title></title>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-  <script src="/js/bundle.js"></script>
+  <title>Thalassa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <!-- routeProvider broken for /pools/:pshp in 1.1.5 -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular.min.js"></script>
+  <script src="/bower_components/d3/d3.min.js"></script>
+  <script src="/bower_components/rickshaw/rickshaw.min.js"></script>
+  <script src="/bower_components/underscore/underscore.js"></script>
+  <script src="/js/modules/localStorageModule.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/browserifyServiceBundle.js"></script>
+  <script src="/js/services/underscoreService.js"></script>
+  <script src="/js/services/dataStreamService.js"></script>
+  <script src="/js/controllers/MainController.js"></script>
+  <script src="/js/controllers/PoolDetailController.js"></script>
+  <script src="/js/controllers/ActivityController.js"></script>
+  <script src="/js/controllers/NavigationController.js"></script>
+  <script src="/js/controllers/ConnectionController.js"></script>
+  <script src="/bower_components/jquery/jquery.min.js"></script>
+  <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script type="text/javascript">
-    var shoe        = require('shoe')
-      , crdt        = require('crdt')
-      , routeTable  = new crdt.Doc()
-      ;
-
-    routeTable.on('row_update', function (row) { 
-      console.log(row.toJSON()) 
-    });
-
-    var stream = shoe('/stream');
-
-    var rtStream = routeTable.createStream();
-    stream.pipe(rtStream).pipe(stream);
-    //rtStream.pipe(stream);
-
-    var app = angular.module('aqueduct', []).controller('Status', function ($scope) {
-      $scope.frontendsMap = {};
-      $scope.backendsMap = {};
-      $scope.status = {};
-
-      routeTable.on('row_update', function (row) {
-        var row = row.toJSON();
-        if (row._type === 'frontend') {
-          $scope.frontendsMap[row.id] = row;
-        }
-        else if (row._type === 'backend') {
-          $scope.backendsMap[row.id] = row;
-        }
-        else if (row._type === 'stat') {
-          $scope.status[row.id] = row.status;
-        }
-        setTimeout(function () { $scope.$apply(); }, 10);
-      });
-
-    });
-
   </script>
 </head>
-<body ng-app="aqueduct">
-
-  <div ng-controller="Status">
-    <h3>Frontends</h3>
-    <p ng-repeat="(id, frontend) in frontendsMap">
-      {{frontend.name}} ({{frontend.bind}}): {{status['stat/'+frontend.id]}}  --> {{frontend.backend}}
-    </p>
-
-    <h3>Backends</h3>
-    <div ng-repeat="(id, backend) in backendsMap">
-      {{backend.name}}: {{status['stat/'+backend.id]}}
-      <ul>
-      <li ng-repeat="member in backend.members">
-        {{member.host}}:{{member.port}} - {{status['stat/'+backend.id+'/'+backend.name+'_'+member.host+':'+member.port]}}
-      </li>
-      </ul>
+<body ng-app="crowsnest" ng-controller="MainController">
+  <div class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" ng-controller="NavigationController">
+    <div class="container">
+      <connection-status class="pull-left"></connection-status>
+      <a href="/overview" class="navbar-brand">Thalassa</a>
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+        <ul class="nav navbar-nav">
+          <li ng-class="{active: $route.current.active == 'overview'}">
+            <a href="/overview">Overview</a>
+          </li>
+          <li ng-class="{active: $route.current.active == 'activity'}">
+            <a href="/activity">Activity</a>
+          </li>
+        </ul>
+      </nav>
     </div>
-
   </div>
-
+  <div id ="view-container" class="container" ng-view >
+  </div>
 </body>
 </html>
