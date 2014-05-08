@@ -20,7 +20,7 @@ angular.module('crowsnest').controller('PoolDetailController', function ($scope,
 
   function refreshData() {
     var ps = $scope.ps;
-    dataStream.subscribeToStats(data.id);
+    dataStream.subscribeToStats(ps.id);
     $scope.frontends = ps.getFrontends();
     $scope.backends = ps.getBackends();
     $scope.connStats = {};
