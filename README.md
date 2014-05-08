@@ -53,13 +53,21 @@ The easiest way to run Aqueduct at this point is with the bin script from the co
       --persistence        directory to save configuration
       --sudo               use sudo when starting haproxy
       --debug              enabled debug logging
-
+      --dbPath             filesystem path for leveldb               [default: "./node_modules/thalassa-crowsnest/bin/db"] 
 
 For example the command to run might look something like this (typically how I run locally):
 
 	./node_modules/.bin/thalassa-aqueduct --haproxyCfgPath  /tmp/haproxy.cfg --debug --persistence \
 	  '/tmp/aqueduct.json' --templateFile dev.haproxycfg.tmpl --haproxyPidPath /tmp/haproxy.pid  \
 	  --label 'myapp-dev'
+
+# Web UI
+
+Aqueduct provides a web UI that allows users to get a visual representation of the frontends/backends/member data related to their haproxy instance (via the 'overview' page), as well as some insight into the activity (haproxy config changes, online/offline events) occuring within Aqueduct (via the 'activity' page). 
+
+The UI can be accessed on the port specified by the --port parameter (by default port 10000). 
+
+e.g. http://127.0.0.1:10000 would access the web UI on localhost at the default port of 10000
 
 # HTTP API
 
