@@ -12,6 +12,7 @@ var assert = require('assert')
   , split = require('split')
   , through = require('through')
   , crdt = require('crdt')
+  , extend = require('extend')
   ;
 
 module.exports = function Aqueduct (opts) {
