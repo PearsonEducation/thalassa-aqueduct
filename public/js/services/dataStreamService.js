@@ -183,7 +183,7 @@ angular.module('crowsnest').factory('dataStream', function (browserify, $rootSco
     data.on('service-removed', handleServiceRemove);
 
     aqueductServer = this;
-    data.emit('aqueduct-connected', aqueductServer);
+    data.emit('pool-connected', aqueductServer);
   }
 
 
