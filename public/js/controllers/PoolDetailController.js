@@ -4,7 +4,6 @@ angular.module('crowsnest').controller('PoolDetailController', function ($scope,
     dataStream.on('pool-connected', function(data){
       $scope.$apply(function() {
         $scope.ps = data;
-        dataStream.subscribeToStats(data.id);
         refreshData(); 
       });
     });
@@ -21,6 +20,7 @@ angular.module('crowsnest').controller('PoolDetailController', function ($scope,
 
   function refreshData() {
     var ps = $scope.ps;
+    dataStream.subscribeToStats(data.id);
     $scope.frontends = ps.getFrontends();
     $scope.backends = ps.getBackends();
     $scope.connStats = {};
