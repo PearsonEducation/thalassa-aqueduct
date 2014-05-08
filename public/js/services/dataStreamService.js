@@ -267,7 +267,6 @@ angular.module('crowsnest').factory('dataStream', function (browserify, $rootSco
     reinitialize();
 
     var mx = new MuxDemux(function (s) {
-      console.log("Websocket type: " + s.meta.type);
       if (s.meta.type === 'aqueduct') {
         var server = AqueductServer(s.meta);
 
