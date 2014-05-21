@@ -80,7 +80,7 @@ For example:
     [{
         "id": "frontend/myapp",
         "_type": "frontend",
-        "name": "myapp",
+        "key": "myapp",
         "bind": "*:8080,*:80",
         "backend": "live",
         "mode": "http",
@@ -96,14 +96,14 @@ For example:
     }]
 
 
-### GET `/frontends/{name}`
+### GET `/frontends/{key}`
 
-Gets a specific frontend by `name`. Expect a response status code of `200` otherwise `404`.
+Gets a specific frontend by `key`. Expect a response status code of `200` otherwise `404`.
 
 
-### PUT `/frontends/{name}`
+### PUT `/frontends/{key}`
 
-Create or update a `frontend` by `name`. `PUT` with a `Content-Type` of `application/json` and a body like:
+Create or update a `frontend` by `key`. `PUT` with a `Content-Type` of `application/json` and a body like:
 
     {
         "bind": "10.2.2.2:80,*:8080" // IP and ports to bind to, comma separated, host may be *
@@ -152,9 +152,9 @@ Header rules support `hdr_dom` with a entire value at this point
 The natives property is an end around way to insert raw lines of config for front ends and backends. Use them sparingly but use them if you need them.
 
 
-### DELETE `/frontends/{name}`
+### DELETE `/frontends/{key}`
 
-Delete a specific frontend by `name`. Expect `200` or `404`
+Delete a specific frontend by `key`. Expect `200` or `404`
 
 
 ### GET `/backends`
@@ -203,9 +203,9 @@ For example:
     }]
 
 
-### PUT `/backends/{name}`
+### PUT `/backends/{key}`
 
-Create or update a `backend` by `name`. `PUT` with a `Content-Type` of `application/json` and a body like:
+Create or update a `backend` by `key`. `PUT` with a `Content-Type` of `application/json` and a body like:
 
     {
         "type" : "dynamic|static" 
@@ -225,18 +225,18 @@ Create or update a `backend` by `name`. `PUT` with a `Content-Type` of `applicat
                        // otherwise expects { host: '10.10.10.10', port: 8080}
     }
 
-### GET `/backends/{name}`
+### GET `/backends/{key}`
 
-Gets a specific `backend` by `name`. Expect `200` else `404`.
-
-
-### DELETE `/backends/{name}`
-
-Delete a specific `backend` by `name`. Expect `200` or `404`
+Gets a specific `backend` by `key`. Expect `200` else `404`.
 
 
+### DELETE `/backends/{key}`
 
-### POST `/backends/{name}`
+Delete a specific `backend` by `key`. Expect `200` or `404`
+
+
+
+### POST `/backends/{key}`
 
 Update a `backend`s `role` and `version` Subscription with a `Content-Type` of `application/json` and a body like:
 
