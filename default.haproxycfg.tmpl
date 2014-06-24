@@ -27,11 +27,11 @@ global
     stats auth showme:showme
 
 {{#each frontends}}
-  frontend {{name}}
+  frontend {{key}}
     {{frontendHelper this}}
 {{/each}}
 
 {{#each backends}}
-  backend {{name}}
+  backend {{key}}
     {{backendHelper this}}
 {{/each}}
