@@ -112,7 +112,7 @@ Create or update a `frontend` by `key`. `PUT` with a `Content-Type` of `applicat
       , "keepalive": "close"  // default: "default", expects default|close|server-close
       , "rules": []           // array of rules, see next section
       , "natives": []         // array of strings of raw config USE SPARINGLY!!
-    };
+    }
 
 #### Routing Rules
 
