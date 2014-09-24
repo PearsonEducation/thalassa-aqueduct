@@ -1,6 +1,6 @@
 {
   "name": "thalassa-aqueduct",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Dynamic haproxy load balancer and configuration. Part of Thalassa",
   "main": "index.js",
   "scripts": {
