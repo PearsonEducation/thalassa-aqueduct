@@ -50,7 +50,9 @@
     "mkdirp": "~0.3.5",
     "split": "~0.2.10",
     "browserify": "~2.25.1",
-    "CBuffer": "~0.1.4"
+    "CBuffer": "~0.1.4",
+    "joi": "^5.0.2",
+    "boom": "^2.6.1"
   },
   "devDependencies": {
     "jshint": "~2.1.4",
