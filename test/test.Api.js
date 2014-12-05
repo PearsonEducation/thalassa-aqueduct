@@ -48,7 +48,11 @@ describe ('API', function () {
 
         apiPort = port3;
         apiRoot = 'http://' + localhost + ':' + apiPort;
-        server = Hapi.createServer(localhost, apiPort);
+        server = new Hapi.Server();
+        server.connection({
+		port: apiPort,
+		host: localhost
+	});
         haproxyManager = new MockHaproxyManager();
         server.route( (new Api({ data: new Data(), haproxyManager: haproxyManager })).routes() );
         server.start(done);
